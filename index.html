@@ -214,15 +214,15 @@ function txt(t,x,y,size,col,w){ctx.fillStyle=col;ctx.font=`${w||900} ${size}px C
 const SV=(()=>{try{return JSON.parse(localStorage.getItem('fady_save')||'{}')}catch(e){return {}}})();function saveG(){try{localStorage.setItem('fady_save',JSON.stringify({money:S.money,up:S.up,paint:S.paint,rec:S.rec,rep:S.rep,daily:S.daily}));}catch(e){}}
 const S={occ:'none',rep:SV.rep||10,daily:SV.daily||{},gov:'giza',rec:SV.rec||{},veh:'tuk',stage:'1',up:SV.up||{},paint:SV.paint||'#e63946',scene:'menu',gender:'m',mode:'ride',zone:'shaabi',level:'easy',t:0,tok:0,money:SV.money!=null?SV.money:50};
 const G2=(m,f)=>S.gender==='f'?f:m;
-const ME=()=>G2('انت','انتي'),PV=()=>({pitch:G2(.85,1.45),rate:1});
+const ME=()=>G2('انت','انتي'),PV=()=>({pitch:G2(.85,1.45),rate:1,vk:G2('pm','pf')});
 const ibni=()=>G2('ابني','بنتي'),yaa=()=>G2('يا عم','يا أبلة');
 
 const DR={
- kid:{name:'الواد بلية',tag:'عيّل صغير',music:'mahr',reckless:true,speed:16,sway:1.2,crash:.55,body:'#e63946',sticker:'الواد الجامد',voice:{pitch:1.9,rate:1.25},reply:()=>'يلا!'},
- shabah:{name:'الشبح',tag:'شاب كاب على ورا',music:'mahr',reckless:true,speed:15,sway:1,crash:.45,body:'#2b2d42',sticker:'ملك الطريق',voice:{pitch:.9,rate:1.15},reply:()=>'اركب'},
- polite:{name:'الأسطى محمود',tag:'شاب محترم',music:'quran',speed:9,sway:.1,body:'#1d6fd1',sticker:'ما شاء الله',voice:{pitch:1,rate:1},reply:()=>G2('اتفضل يا أستاذ','اتفضلي يا أستاذة')},
- old:{name:'الحاج عبده',tag:'راجل كبير',music:'oum',speed:7.5,sway:.1,body:'#2a9d8f',sticker:'رضا الوالدين',voice:{pitch:.7,rate:.85},reply:()=>G2('اتفضل يا ابني','اتفضلي يا بنتي')},
- sheikh:{name:'الشيخ حسن',tag:'شيخ',music:'quran',speed:8.5,sway:.1,body:'#3a7d44',sticker:'ولا تنسوا ذكر الله',voice:{pitch:.8,rate:.9},reply:()=>G2('اتفضل يا ابني، ربنا يسهّل','اتفضلي يا بنتي، ربنا يسهّل')}
+ kid:{name:'الواد بلية',tag:'عيّل صغير',music:'mahr',reckless:true,speed:16,sway:1.2,crash:.55,body:'#e63946',sticker:'الواد الجامد',voice:{vk:'kid',pitch:1.9,rate:1.25},reply:()=>'يلا!'},
+ shabah:{name:'الشبح',tag:'شاب كاب على ورا',music:'mahr',reckless:true,speed:15,sway:1,crash:.45,body:'#2b2d42',sticker:'ملك الطريق',voice:{vk:'shabah',pitch:.9,rate:1.15},reply:()=>'اركب'},
+ polite:{name:'الأسطى محمود',tag:'شاب محترم',music:'quran',speed:9,sway:.1,body:'#1d6fd1',sticker:'ما شاء الله',voice:{vk:'polite',pitch:1,rate:1},reply:()=>G2('اتفضل يا أستاذ','اتفضلي يا أستاذة')},
+ old:{name:'الحاج عبده',tag:'راجل كبير',music:'oum',speed:7.5,sway:.1,body:'#2a9d8f',sticker:'رضا الوالدين',voice:{vk:'old',pitch:.7,rate:.85},reply:()=>G2('اتفضل يا ابني','اتفضلي يا بنتي')},
+ sheikh:{name:'الشيخ حسن',tag:'شيخ',music:'quran',speed:8.5,sway:.1,body:'#3a7d44',sticker:'ولا تنسوا ذكر الله',voice:{vk:'sheikh',pitch:.8,rate:.9},reply:()=>G2('اتفضل يا ابني، ربنا يسهّل','اتفضلي يا بنتي، ربنا يسهّل')}
 };
 const MUS={mahr:'🔊 مهرجانات',quran:'📖 قرآن كريم',oum:'🎻 أم كلثوم',off:'🔇 مقفول'};
 const ZONES={
@@ -295,7 +295,7 @@ function sfxFile(n,v){if(!VO.has('sfx_'+n))return false;try{const a=new Audio('v
 
 const VQ=[];function vqNext(){if(VA&&!VA.ended&&!VA.paused)return;const id=VQ.shift();if(!id)return;try{VA=new Audio('voice/'+id+'.mp3');VA.onended=()=>setTimeout(vqNext,250);VA.onerror=vqNext;VA.play().catch(vqNext);}catch(e){vqNext();}}
 function playVoice(t,p){const b=vid(vnorm(t)),f=(p&&p.vk)?[b+'_'+p.vk,b+(p.pitch>=1.3?'_f':'_m'),b]:(p&&p.pitch>=1.3)?[b+'_f',b]:[b+'_m',b];const id=f.find(x=>VO.has(x));if(!id)return false;if(VQ.length>2)VQ.shift();VQ.push(id);vqNext();return true;}
-function speak(text,p){if(!A.on||!p)return;if(playVoice(text,p))return;if(!window.__TTS||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.replace(/[^؀-ۿ\s،؟!.]/g,''));u.lang='ar-EG';const vs=speechSynthesis.getVoices().filter(v=>/^ar/i.test(v.lang));if(vs.length)u.voice=vs.find(v=>/EG/i.test(v.lang))||vs[0];u.pitch=p.pitch||1;u.rate=p.rate||1;speechSynthesis.speak(u);}catch(e){}}
+function speak(text,p){if(window.__VH&&p)window.__VH(text,p);if(!A.on||!p)return;if(playVoice(text,p))return;if(!window.__TTS||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.replace(/[^؀-ۿ\s،؟!.]/g,''));u.lang='ar-EG';const vs=speechSynthesis.getVoices().filter(v=>/^ar/i.test(v.lang));if(vs.length)u.voice=vs.find(v=>/EG/i.test(v.lang))||vs[0];u.pitch=p.pitch||1;u.rate=p.rate||1;speechSynthesis.speak(u);}catch(e){}}
 
 /* ---------- واجهة ---------- */
 let TM=[];
@@ -455,7 +455,7 @@ function hail(){if(ST.wait)return;P0.hail=2.2;say(ME(),'توك توك! 🖐','me
 function boardBtns(k,smell){return [{t:smell?'🛺 اركب على مضض 🤢':'🛺 اركب',f:()=>{setChoices([]);S.smell=smell;fadeTo(()=>startRide(k.drv));}},{t:'✋ لأ، هستنى غيره',c:'ghost',f:()=>refuse(k)}];}
 function dirtyBench(k){const d=DR[k.drv];sfx('splat',.4);
  later(.2,()=>say('','التوك توك وقف قدامك… ونزلت منه ست شايلة شنط السوق 🐟🐔','nar',null,2600));
- later(2.4,()=>say('ست نازلة بالشنط','حاسب يا ابني… كيس السمك بيقطّر 😅','',{pitch:1.3}));
+ later(2.4,()=>say('ست نازلة بالشنط','حاسب يا ابني… كيس السمك بينقّط 😅','',{pitch:1.3}));
  later(4.6,()=>say('','الكنبة اللي هتقعد عليها مبلولة وريحتها سمك وفراخ 🤢','nar',null,2600));
  later(6.4,()=>setChoices([{t:'🛺 اركب وخلاص',f:()=>{setChoices([]);S.smell=1;fadeTo(()=>startRide(k.drv));}},
   {t:'🗣️ إيه ده يا ريس؟ الكنبة مش نضيفة!',f:()=>{setChoices([]);say(ME(),'إيه ده يا ريس؟! الكنبة مش نضيفة 🤢','me',PV());
@@ -818,7 +818,8 @@ function finish(kind){if(R.over)return;R.over=true;setChoices([]);setEngine(0,fa
 let D=null;
 const PAX=[{name:'الحاجة سعاد',g:'f',like:{quran:1.6,oum:1.6,mahr:-7,off:.2},voice:{pitch:1.3,rate:.85},mahr:'وطّي الصوت ده يا ابني الله يهديك! 😤'},
  {name:'الأستاذ عادل',g:'m',like:{quran:1.2,oum:2,mahr:-5,off:.2},voice:{pitch:.8,rate:1},mahr:'لو سمحت يا أسطى، اقفل الأغاني دي!'},
- {name:'كريم الطالب',g:'m',like:{quran:.8,oum:-.3,mahr:-1.5,off:0},voice:{pitch:1.05,rate:1.1},mahr:'وطّي شوية يا كبير، دماغي اتصدعت 😅'}];
+ {name:'كريم الطالب',g:'m',like:{quran:.8,oum:-.3,mahr:-1.5,off:0},voice:{pitch:1.05,rate:1.1},mahr:'وطّي شوية يا كبير، دماغي اتصدعت 😅'},
+ {name:'أم سيد وعيالها',g:'f',kids:1,like:{quran:1.3,oum:1.4,mahr:-3,off:.2},voice:{vk:'umm',pitch:1.3,rate:.9},mahr:'وطّي الزفت ده يا ابني، العيال مش ناقصين دوشة!'}];
 const KEY={};
 function startDrive(){amb(S.zone==='reef'?'rural':S.zone==='souq'?'market':'street');newScene('drive');D={pos:0,v:0,x:1.7,L:1400,cross:[],world:buildWorld(1400,[]),objs:[],parts:[],nextZ:45,comfort:85,radio:'off',pax:pick(PAX),jump:0,jv:0,shake:0,roll:0,t:0,steer:0,ending:false,over:false,flash:0,lastLine:0,pt:0,liked:''};D.season=pickSeason();later(.8,()=>toast(SEASONS[D.season].nm));addBB(D);
  {const hf=ZONES[S.zone].half,Lz=Math.round(D.L*.6);D.lz=Lz;D.objs.push({type:'lsign',z:Lz-3,x:hf+1.3},{type:'cone',z:Lz-8,x:hf-1.1},{type:'cone',z:Lz-13,x:hf-1.5},{type:'cop',z:Lz,x:hf-.5});}
@@ -953,7 +954,8 @@ const GPAX=[
  {id:'adel',name:'الأستاذ عادل',g:'m',voice:{pitch:.8,rate:1.05},like:{quran:1.2,oum:2,mahr:-5,off:.2},mahr:'لو سمحت يا أسطى، اقفل الأغاني دي!',ok:15,low:10,stub:1,late:1,nag:['يا أسطى أنا متأخر، خليها عشرة!']},
  {id:'mona',name:'أم أحمد',g:'f',voice:{pitch:1.3,rate:.95},like:{quran:1.4,oum:1.2,mahr:-4,off:.2},mahr:'وطّي شوية يا ابني، الواد نايم على كتفي',ok:15,low:10,stub:1,bags:1,nag:['ده أنا شايلة شنط السوق كله! خليها عشرة']},
  {id:'karim',name:'كريم الطالب',g:'m',voice:{pitch:1.05,rate:1.1},like:{quran:.8,oum:-.3,mahr:1,off:0},mahr:'',ok:10,low:7,stub:1,nochange:1,nag:['يا كبير أنا طالب، خليها سبعة 🙏']},
- {id:'abdo',name:'عم عبد الحميد',g:'m',voice:{pitch:.7,rate:.85},like:{quran:1.6,oum:2,mahr:-6,off:.3},mahr:'إيه الدوشة دي يا ابني؟! اقفلها',ok:12,low:8,stub:1,old:1,nag:['أيام زمان كانت بشلن يا ابني! خليها تمانية']}];
+ {id:'abdo',name:'عم عبد الحميد',g:'m',voice:{pitch:.7,rate:.85},like:{quran:1.6,oum:2,mahr:-6,off:.3},mahr:'إيه الدوشة دي يا ابني؟! اقفلها',ok:12,low:8,stub:1,old:1,nag:['أيام زمان كانت بشلن يا ابني! خليها تمانية']},
+ {id:'ummsayed',name:'أم سيد وعيالها',g:'f',voice:{vk:'umm',pitch:1.3,rate:.9},kids:1,like:{quran:1.3,oum:1.4,mahr:-3,off:.2},mahr:'وطّي الزفت ده يا ابني، العيال مش ناقصين دوشة!',ok:15,low:10,stub:2,bags:1,nag:['يا ابني ده أنا معايا تلات عيال! خليها عشرة','عشرة وربنا يكرمك، العيال جعانين']}];
 function startGuide(cfg){const st=cfg||STAGES[S.stage];S.zone=st.zone;if(st.season)S.forceSeason=st.season;startDrive();S.forceSeason=null;const G=D;
  G.guide=st;G.stg=+S.stage;G.tri=S.veh==='tri'&&S.up.tri;if(G.tri){G.cargo=pick(CARGO);hud(true,'سلامة الحمولة',true);}G.night=G.stg>1&&Math.random()<.35;G.m=(G.tri?3:1)*(G.night?1.5:1)*(S.rep>=60?1.2:1);if(S.up.shade)G.comfort=Math.min(100,G.comfort+8);G.wrong=0;G.turnsOk=0;G.splashN=0;G.stallN=0;G.slowPud=0;G.hagN=0;
  let pp=GPAX.filter(p=>st.pax==='late'?p.late:true);G.pax=pick(pp);G.dest=pick(DEST);
@@ -1051,7 +1053,10 @@ function guideHits(dt){const G=D;
    if(near&&G.v>7){o.wet=1;G.splashN++;G.comfort-=10;sfx('splash');toast('💦 غرّقت اللي ماشي!');say(o.g==='f'?'ست ماشية':'واحد ماشي',o.g==='f'?'يا شيخ حرام عليك! هدومي كلها طين! 😭':'يا عم غرّقتني!! البدلة الجديدة! 😡','',{pitch:o.g==='f'?1.3:.9});later(1.7,()=>gSay('حرام عليك يا أسطى، هدّي عند المية 😔',1));}
    else if(near&&G.v<=7){G.slowPud++;if(G.slowPud===1||G.slowPud%3===0){G.comfort=Math.min(100,G.comfort+4);gSay(pick(['برافو إنك هدّيت عند المية 👍','كده الأصول يا أسطى 👌']),3);}}}}}
 function paxSay(t,gap){if(S.t-D.lastLine<(gap||4))return;D.lastLine=S.t;say(D.pax.name,t,'',D.pax.voice);}
-function updDrive(dt){const G=D,z=ZONES[S.zone],hf=z.half;G.t+=dt;if(G.hag){G.v=0;setEngine(0,true);meter(G.comfort,'🤝','الفصال الأول 😅');return;}if(G.guide){guideUpd(dt);}if(!G.adhanDone&&G.pos>G.L*.3&&!G.ending){G.adhanDone=1;adhanD();}
+const KIDL=['ماما! هو ضربني!','أنا عايز شيبسي!','ماما أنا عايز أقعد جنب الشباك!','إمتى هنوصل؟ إمتى هنوصل؟','بيب بيب! أسرع يا عمو!','ماما هو خد الكورة بتاعتي!','عايز أروح الحمام!','عمو! شغّل أغاني!'];
+const UMMK=['اسكت يا واد انت وهو!','اقعد ساكت بدل ما أنزلك!','يا سيد! سيب أختك!','بس بقى! صدعتوني!','حاضر حاضر، لما نروّح'];
+function kidsTick(G,dt){if(!G.pax||!G.pax.kids||G.hag||G.ending)return;G.kt=(G.kt==null?4:G.kt)-dt;if(G.kt>0)return;G.kt=rnd(6,10);const kv={vk:'kids',pitch:1.8,rate:1.2};say('العيال',pick(KIDL),'',kv);G.comfort=Math.max(0,G.comfort-1.5);if(Math.random()<.6)later(1.8,()=>say(G.pax.name,pick(UMMK),'',G.pax.voice));}
+function updDrive(dt){const G=D,z=ZONES[S.zone],hf=z.half;G.t+=dt;kidsTick(G,dt);if(G.hag){G.v=0;setEngine(0,true);meter(G.comfort,'🤝','الفصال الأول 😅');return;}if(G.guide){guideUpd(dt);}if(!G.adhanDone&&G.pos>G.L*.3&&!G.ending){G.adhanDone=1;adhanD();}
  if(!G.lagDone&&!G.ending){const rl=G.lz-G.pos;if(rl<80&&!G.lagWarn){G.lagWarn=1;toast('🚔 لجنة مرور قدامك… هدّي');}if(rl<3){G.lagDone=1;if(G.v>9||G.radio==='mahr'){startChase(G,G.v>9?'السرعة':'المهرجانات');}else{say('أمين الشرطة','اتفضل يا محترم، كمّل 👌','',{pitch:.75});toast('👮 اتفضل يا محترم');G.comfort=Math.min(100,G.comfort+10);}}}genDrive();
  if(G.chase&&!G.ending){const C=G.chase;C.t+=dt;C.gap-=(C.spd-G.v)*dt;C.ht=(C.ht||0)-dt;if(C.ht<=0){C.ht=.4;hint('🚔 '+C.nm+' ورا بـ '+toAr(Math.max(0,Math.round(C.gap)))+' م • 🛑 اقف وادفع المخالفة… أو حاول تفلت');}
   if(G.v<.8){const fn=C.fine;S.money=Math.max(0,S.money-fn);G.chase=null;hint('');G.comfort-=10;G.fined=(G.fined||0)+1;say(C.who,'مخالفة '+C.why+': '+toAr(fn)+' جنيه… واتفضل بالراحة المرة الجاية 👮','',{pitch:.75});toast('🧾 مخالفة '+toAr(fn)+' جنيه');}
