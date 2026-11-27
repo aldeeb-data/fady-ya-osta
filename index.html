@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<link rel="preload" href="assets/deeb_wolf.png" as="image" fetchpriority="high">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0b0b0f">
 <link rel="icon" href="icons/icon-192.png">
@@ -88,7 +89,7 @@ h2{font:400 24px/1.1 Lalezar,Cairo,sans-serif;margin:6px 0;color:var(--yel)}
 @keyframes dPunch{0%{transform:scale(2.4);filter:blur(10px) brightness(3);opacity:0}55%{transform:scale(.94);filter:drop-shadow(0 0 40px rgba(255,200,90,.9));opacity:1}100%{transform:scale(1);filter:drop-shadow(0 0 24px rgba(255,200,90,.45))}}
 @keyframes dTxt{0%{transform:scale(1.6);letter-spacing:30px;opacity:0}100%{transform:scale(1);opacity:1}}@keyframes dFl{0%{opacity:0}15%{opacity:1}100%{opacity:0}}@keyframes dShk{0%,100%{transform:none}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-3px,2px)}80%{transform:translate(2px,-1px)}}
 #splash.out{opacity:0;pointer-events:none}
-#splash img{width:min(46vw,220px);height:auto;animation:wIn 1.1s cubic-bezier(.2,.9,.3,1.2) both;filter:drop-shadow(0 0 24px rgba(255,200,90,.35))}
+#splash:not(.ld) img,#splash:not(.ld) .sD,#splash:not(.ld) .sG,#splash:not(.ld) .sA{visibility:hidden;animation:none}#splash img{width:min(46vw,220px);height:auto;animation:wIn 1.1s cubic-bezier(.2,.9,.3,1.2) both;filter:drop-shadow(0 0 24px rgba(255,200,90,.35))}
 #splash .sD{font:900 clamp(54px,17vw,96px)/1 Cinzel,serif;letter-spacing:4px;direction:ltr;background:linear-gradient(180deg,#FFF1C2,#F2C55A 40%,#C48D24 72%,#8A5A12);-webkit-background-clip:text;background-clip:text;color:transparent;animation:tIn .8s .45s both;filter:drop-shadow(0 3px 0 #4A2F06)}
 #splash .sG{font:800 clamp(20px,6vw,34px)/1.2 Montserrat,sans-serif;letter-spacing:10px;direction:ltr;background:linear-gradient(180deg,#FFF1C2,#E9B84A 50%,#9A6A15);-webkit-background-clip:text;background-clip:text;color:transparent;animation:tIn .8s .7s both}
 #splash .sA{font:700 18px Cairo,sans-serif;color:#E9B84A;margin-top:8px;animation:tIn .8s .95s both}
@@ -105,7 +106,7 @@ h2{font:400 24px/1.1 Lalezar,Cairo,sans-serif;margin:6px 0;color:var(--yel)}
 </style>
 </head>
 <body>
-<div id="splash" role="button" aria-label="ديب جيمز — دوس للمتابعة"><img src="assets/deeb_wolf.png" alt="ذئب ديب جيمز"><div class="sD">DEEB</div><div class="sG">GAMES</div><div class="sA">ديب جيمز</div><div class="sL">Developed and provided by : Mohammad Aldeeb</div></div>
+<div id="splash" role="button" aria-label="ديب جيمز — دوس للمتابعة"><img src="assets/deeb_wolf.png" fetchpriority="high" decoding="sync" alt="ذئب ديب جيمز"><div class="sD">DEEB</div><div class="sG">GAMES</div><div class="sA">ديب جيمز</div><div class="sL">Developed and provided by : Mohammad Aldeeb</div></div>
 <script>function deebBoom(C,t){const o=C.createOscillator(),g=C.createGain();o.type='sine';o.frequency.setValueAtTime(120,t);o.frequency.exponentialRampToValueAtTime(38,t+1.2);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.9,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+1.6);o.connect(g);g.connect(C.destination);o.start(t);o.stop(t+1.7);
  const n=C.createBuffer(1,C.sampleRate*1.2,C.sampleRate),d=n.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,4);const s=C.createBufferSource();s.buffer=n;const f=C.createBiquadFilter();f.type='lowpass';f.frequency.value=900;const ng=C.createGain();ng.gain.value=.5;s.connect(f);f.connect(ng);ng.connect(C.destination);s.start(t);
  const w=C.createBuffer(1,C.sampleRate*.5,C.sampleRate),wd=w.getChannelData(0);for(let i=0;i<wd.length;i++)wd[i]=(Math.random()*2-1)*Math.pow(i/wd.length,3);const ws=C.createBufferSource();ws.buffer=w;const wf=C.createBiquadFilter();wf.type='bandpass';wf.frequency.setValueAtTime(400,t-.5);wf.frequency.exponentialRampToValueAtTime(3000,t);const wg=C.createGain();wg.gain.value=.35;ws.connect(wf);wf.connect(wg);wg.connect(C.destination);ws.start(Math.max(C.currentTime,t-.5));}
@@ -125,7 +126,7 @@ function synthHowl(){try{const C=window.__hac||(window.__hac=new (window.AudioCo
  const fq=[[0,190],[.38,410],[1.05,385],[T,170]];
  for(const [m,type,v] of [[1,'sawtooth',.22],[1.004,'sawtooth',.18],[.5,'sine',.5],[2,'triangle',.06]]){const o=C.createOscillator(),g=C.createGain();o.type=type;fq.forEach(([dt,f],i)=>i?o.frequency.exponentialRampToValueAtTime(f*m,t+dt):o.frequency.setValueAtTime(f*m,t));vg.connect(o.frequency);g.gain.value=v;o.connect(g);g.connect(lp);o.start(t);o.stop(t+T+.1);}
  const nb=C.createBuffer(1,C.sampleRate*T,C.sampleRate),nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;const ns=C.createBufferSource();ns.buffer=nb;const nf=C.createBiquadFilter();nf.type='bandpass';nf.frequency.value=1200;nf.Q.value=1.5;const ng=C.createGain();ng.gain.value=.05;ns.connect(nf);nf.connect(ng);ng.connect(lp);ns.start(t);vib.start(t);vib.stop(t+T+.1);}catch(e){}}
-{const s=document.getElementById('splash');let st=0;const tap=document.createElement('div');tap.className='sTap';tap.textContent='اضغط للبدء ▶';s.append(tap);
+{const s=document.getElementById('splash');const wi=s.querySelector('img');const ld=()=>s.classList.add('ld');if(wi.complete&&wi.naturalWidth)ld();else{wi.onload=ld;wi.onerror=ld;setTimeout(ld,4000);}let st=0;const tap=document.createElement('div');tap.className='sTap';tap.textContent='اضغط للبدء ▶';s.append(tap);
  const h=()=>{if(st===2)return;st=2;s.classList.add('out');setTimeout(()=>s.remove(),700);};
  const intro=()=>{if(st)return;st=1;tap.remove();s.classList.add('go');deebIntro();};
  s.addEventListener('click',()=>{st?h():intro();});
@@ -325,7 +326,7 @@ function drvSide(t){const skin='#b97a4f';
  ctx.fillStyle='#111';ell(31,-115,1.4,1.6);ctx.fill();}
 function tukSide(k){const d=DR[k.drv],c=d.body,dk=shade(c,-35);ctx.save();ctx.translate(k.x,k.y+k.bob);ctx.scale(k.sc,k.sc);
  const sg=ctx.createRadialGradient(5,2,4,5,2,95);sg.addColorStop(0,'rgba(0,0,0,.4)');sg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=sg;ell(5,2,95,11);ctx.fill();
- {const ti=tukImg(k);if(ti){fitB(ti[0],0,20,ti[1],ti[2]);ctx.restore();return;}}
+ {const ti=tukImg(k);if(ti){if(ti[3])ctx.scale(-1,1);fitB(ti[0],0,20,ti[1],ti[2]);ctx.restore();return;}}
  ctx.fillStyle='rgba(25,20,30,.88)';ctx.fillRect(-74,-126,118,66);
  ctx.fillStyle='#7a1f2b';rr(-68,-84,46,22,5);ctx.fill();ctx.fillStyle='#5c1520';rr(-72,-112,10,50,4);ctx.fill();
  drvSide(k.drv);
@@ -531,7 +532,7 @@ function drawBlock(b,P,near,far,hf){const z1=Math.max(b.z1,near+.1),z2=Math.min(
 
 const SPRK={car:['spr_taxi',2.1],lux:['spr_lux',2.1],tukF:['spr_tuk_front',1.7],tukR:['spr_tuk_back',1.7],moto:['spr_moto',1.1],bus:['spr_bus',2.8],karo:['spr_karo',2.2],karoX:['spr_karo_side',3.2],cart:['spr_foulcart',1.9],vstall:['spr_vegstall',2.3],sheep:['spr_sheep',2.4],chick:['spr_chickman',.95],zaffa:['spr_zaffa',4.2],ped:['spr_ped_',.95],sped:['spr_ped_',.95],wped:['spr_ped_',.95],cone:['spr_cone',.5],lsign:['spr_lsign',1.8],palm:['spr_palm',2.6],tree:['spr_tree',2.6]};
 ['spr_taxi','spr_lux','spr_tuk_front','spr_tuk_back','spr_moto','spr_bus','spr_karo','spr_karo_side','spr_foulcart','spr_vegstall','spr_sheep','spr_chickman','spr_zaffa','spr_ped_m','spr_ped_f','spr_ped_m2','spr_ped_f2','spr_cone','spr_lsign','spr_palm','spr_tree','spr_tricycle_view','lm_pyr','lm_sph','lm_tower','lm_nile','lm_citadel','lm_sea','lm_lib','lm_qaitbay','lm_karnak','lm_balloon','lm_felucca','lm_nubian','lm_dam','lm_canal','lm_light'].forEach(n=>{const im=new Image();im.onload=()=>{IMG[n]=im;};im.onerror=()=>{};im.src='assets/'+n+'.webp';});
-function tukImg(k){const side=IMG['tuk_side_'+k.drv],front=IMG['tuk_'+k.drv];if(side&&!(k.state==='stop'&&k.arrived))return [side,330,215];return front?[front,230,220]:null;}
+function tukImg(k){const side=IMG['tuk_side_'+k.drv],front=IMG['tuk_'+k.drv];if(side&&!(k.state==='stop'&&k.arrived))return [side,330,215];return front?[front,230,220,1]:null;}
 function fitB(im,cx,by,bw,bh){const r=Math.min(bw/im.width,bh/im.height),w=im.width*r,h=im.height*r;ctx.drawImage(im,cx-w/2,by-h,w,h);}
 function sprDraw(o,p){const k=SPRK[o.type];if(!k||!p||o.spill||o.wet||o.scr)return false;let key=k[0];if(key==='spr_ped_'){const v=(o.col&&o.col.length%2)?'2':'';key='spr_ped_'+(o.g||'m')+(IMG['spr_ped_'+(o.g||'m')+v]?v:'');}const im=IMG[key];if(!im)return false;
  const w=k[1]*p.s,h=w*im.height/im.width;let x=p.x;if(o.type==='ped'||o.type==='sped'||o.type==='wped'){const hh=1.75*p.s,ww=hh*im.width/im.height;if(o.type==='wped')x+=p.s*1.2;ctx.drawImage(im,x-ww/2,p.y-hh,ww,hh);return true;}
