@@ -176,6 +176,7 @@ function synthHowl(){try{const C=window.__hac||(window.__hac=new (window.AudioCo
 <div class="emo" id="eEmo"></div><h2 id="eTit"></h2><div class="stars" id="eStar"></div>
 <p id="eTxt" style="line-height:1.7;margin:6px 0"></p>
 <div class="tip" id="eTip"></div>
+<button class="btn teal" id="eReward" style="width:100%;margin:6px 0;display:none">🎬 اتفرّج على إعلان قصير وخد ٥٠ ج</button>
 <div class="row"><button class="btn" id="eAgain">العب تاني</button><button class="btn teal" id="eSwap"></button></div>
 <button class="btn ghost" id="eMenu" style="width:100%;margin-top:10px">غيّر المنطقة أو المستوى</button>
 <button class="btn ghost" id="eGarage" style="width:100%;margin-top:8px">🔧 الجراج والكماليات</button>
@@ -406,7 +407,7 @@ function updStreet(dt){for(const c of city.clouds){c.x+=c.v*dt;if(c.x>W+80)c.x=-
  let best=null,bd=1e9;for(const k of ST.tuks){const dd=Math.abs(k.x-P0.x);if(dd<bd){bd=dd;best=k;}}
  if(best){const m=DR[best.drv].music;setMusic(m,clamp(1-bd/(W*.8),0,1)*(m==='mahr'?.5:.35)*(S.scene==='menu'?.4:1));}else setMusic('off',0);
  setEngine(0,false);}
-function drawStreet(){const z=ZONES[S.zone],base=H*.62,curb=H*.7,road=H*.72,bgi=IMG['bg_'+S.zone+'_'+S.bgv]||IMG['bg_'+S.zone];
+function drawStreet(){const z=ZONES[S.zone],base=H*.62,curb=H*.7,road=H*.72,bgi=IMG['bg_'+S.zone+'_'+(S.bgv||'day')]||IMG['bg_'+S.zone+'_day']||IMG['bg_'+S.zone];
  if(bgi){drawCover(bgi,0,0,W,H);}else{
  skyBand(0,base,0);ctx.save();ctx.globalAlpha=.08;ctx.fillStyle='#fff3c4';for(let i=0;i<5;i++){const a=-.2+i*.22+Math.sin(S.t*.2)*.03;poly([W*.2,H*.12,W*.2+Math.cos(a)*W*1.4,H*.12+Math.sin(a)*W*1.4,W*.2+Math.cos(a+.08)*W*1.4,H*.12+Math.sin(a+.08)*W*1.4]);ctx.fill();}ctx.restore();
  for(const b of city.bl)drawBuilding2D(b,base,z.kind);
@@ -528,7 +529,7 @@ function drawBlock(b,P,near,far,hf){const z1=Math.max(b.z1,near+.1),z2=Math.min(
  if(!modern){vquad(P,x,z1+.4,Math.min(z2,b.z2-.4),0,2.5,'#2b1d16');vquad(P,x,z1+.4,Math.min(z2,b.z2-.4),2.6,3.4,b.sc);
   const m=P((z1+b.z2)/2,x,3);if(m&&m.s>14&&(b.z2-z1)>4)txt(b.sign,m.x,m.y,Math.min(28,m.s*.42),'#fff');}}
 
-const SPRK={car:['spr_taxi',2.1],lux:['spr_lux',2.1],tukF:['spr_tuk_front',1.7],tukR:['spr_tuk_back',1.7],moto:['spr_moto',1.1],bus:['spr_bus',2.8],karo:['spr_karo',2.2],karoX:['spr_karo_side',3.2],cart:['spr_foulcart',1.9],vstall:['spr_vegstall',2.3],sheep:['spr_sheep',2.4],chick:['spr_chickman',1.3],zaffa:['spr_zaffa',6.4],ped:['spr_ped_',.95],sped:['spr_ped_',.95],wped:['spr_ped_',.95],cone:['spr_cone',.5],lsign:['spr_lsign',1.8],palm:['spr_palm',2.6],tree:['spr_tree',2.6]};
+const SPRK={car:['spr_taxi',2.1],lux:['spr_lux',2.1],tukF:['spr_tuk_front',1.7],tukR:['spr_tuk_back',1.7],moto:['spr_moto',1.1],bus:['spr_bus',2.8],karo:['spr_karo',2.2],karoX:['spr_karo_side',3.2],cart:['spr_foulcart',1.9],vstall:['spr_vegstall',2.3],sheep:['spr_sheep',2.4],chick:['spr_chickman',.95],zaffa:['spr_zaffa',4.2],ped:['spr_ped_',.95],sped:['spr_ped_',.95],wped:['spr_ped_',.95],cone:['spr_cone',.5],lsign:['spr_lsign',1.8],palm:['spr_palm',2.6],tree:['spr_tree',2.6]};
 ['spr_taxi','spr_lux','spr_tuk_front','spr_tuk_back','spr_moto','spr_bus','spr_karo','spr_karo_side','spr_foulcart','spr_vegstall','spr_sheep','spr_chickman','spr_zaffa','spr_ped_m','spr_ped_f','spr_ped_m2','spr_ped_f2','spr_cone','spr_lsign','spr_palm','spr_tree','spr_tricycle_view','lm_pyr','lm_sph','lm_tower','lm_nile','lm_citadel','lm_sea','lm_lib','lm_qaitbay','lm_karnak','lm_balloon','lm_felucca','lm_nubian','lm_dam','lm_canal','lm_light'].forEach(n=>{const im=new Image();im.onload=()=>{IMG[n]=im;};im.onerror=()=>{};im.src='assets/'+n+'.png';});
 function fitB(im,cx,by,bw,bh){const r=Math.min(bw/im.width,bh/im.height),w=im.width*r,h=im.height*r;ctx.drawImage(im,cx-w/2,by-h,w,h);}
 function sprDraw(o,p){const k=SPRK[o.type];if(!k||!p||o.spill||o.wet||o.scr)return false;let key=k[0];if(key==='spr_ped_'){const v=(o.col&&o.col.length%2)?'2':'';key='spr_ped_'+(o.g||'m')+(IMG['spr_ped_'+(o.g||'m')+v]?v:'');}const im=IMG[key];if(!im)return false;
@@ -1075,7 +1076,7 @@ function finishD(kind,what){if(D.over)return;D.over=true;setEngine(0,false);$('#
 function tipRide(){return `<b>💡 خلاصة الكلام</b><br>التوك توك بقى وسيلة مواصلات أساسية وموجود في كل حتة، ومش عيب خالص ${G2('إنك تركبه','إنك تركبيه')}. بس ${G2('نقّي','نقّي')} مين ${G2('تركب','تركبي')} معاه: بلاش العيّل الصغير، وبلاش اللي مشغّل الأغاني على الآخر.<br>وفي ناس كتير سايقة تكاتك محترمة، فاتحة بيوت وبتسعى على رزقها — وفي كل مكان وكل فئة فيه الكويس.`+(S.gender==='f'?'<br><b>وخصوصاً انتي:</b> بصّي كويس قوي انتي راكبة مع مين قبل ما تركبي.':'');}
 function tipDrive(){if(D&&D.guide)return '<b>💡 نصيحة الأسطى</b><br>اسمع الزبون كويس وهو بيوصفلك، وهدّي عند الدخلات والمية والسوق. اتفق على الأجرة قبل ما تتحرك… والسماح في الفكّة بيجيب رزق 🤲';return '<b>💡 نصيحة الأسطى</b><br>الزبون بيرجعلك لما يرتاح معاك: سواقة هادية، صوت واطي، وبتبص يمين وشمال قبل أي تقاطع. التوك توك فاتح بيوت كتير — خلّيه فاتح بيتك انت كمان وانت محترم وأمين.';}
 function showEnd(E,mode){saveG();$('#eEmo').textContent=E.emo;$('#eTit').textContent=E.tit;$('#eStar').textContent='★'.repeat(E.st)+'☆'.repeat(3-E.st);$('#eTxt').textContent=E.txt;$('#eTip').innerHTML=(mode==='ride'?tipRide():tipDrive())+'<br>🕌 ولما الأذان يأذّن، الكل بيوطّي الصوت أو يقفله احتراماً للأذان.';
- $('#eSwap').textContent=mode==='ride'?'🛺 جرّب تسوق انت':'🧍 جرّب تبقى زبون';$('#dirs').classList.remove('on');S.endMode=mode;setChoices([]);hud(false);hint('');show('sEnd');}
+ $('#eSwap').textContent=mode==='ride'?'🛺 جرّب تسوق انت':'🧍 جرّب تبقى زبون';$('#dirs').classList.remove('on');S.endMode=mode;setChoices([]);hud(false);hint('');show('sEnd');try{ADS.offerReward($('#eReward'),()=>{S.money+=50;saveG();toast('🎬 شكراً! +٥٠ ج اتضافوا لرصيدك');});ADS.between('end_'+mode);}catch(e){}}
 function go(){S.mode==='ride'?startStreet():S.mode==='guide'?startGuide():S.mode==='tour'?startTour():startDrive();show('');}
 function goMenu(){setTimeout(menuStat,50);amb(null);newScene('menu');resetStreet();genCity();hud(false);show('sMenu');setEngine(0,false);}
 
@@ -1114,5 +1115,15 @@ window.__T={S,startRide,startDrive,startStreet,get R(){return R;},get D(){return
 }
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:'&&!/claudeusercontent|claude\.ai/.test(location.host)){navigator.serviceWorker.register('sw.js').catch(()=>{});}try{screen.orientation&&screen.orientation.lock&&document.addEventListener('pointerdown',function f(){document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().then(()=>screen.orientation.lock('landscape')).catch(()=>{});document.removeEventListener('pointerdown',f);});}catch(e){}</script>
+<script>
+/* ---------- إعلانات جوجل للألعاب (H5 Games Ads) — تتفعّل بعد موافقة AdSense ---------- */
+const ADS_CLIENT='';/* ضع هنا ca-pub-XXXXXXXXXXXXXXXX بعد الموافقة */
+window.adsbygoogle=window.adsbygoogle||[];window.adBreak=window.adConfig=function(o){adsbygoogle.push(o);};
+window.__adMute=function(m){try{A.master.gain.value=m?0:.8;}catch(e){}};
+(function(){if(!ADS_CLIENT)return;const sc=document.createElement('script');sc.async=true;sc.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+ADS_CLIENT;sc.setAttribute('data-ad-frequency-hint','90s');sc.crossOrigin='anonymous';document.head.appendChild(sc);adConfig({preloadAdBreaks:'on',sound:'on'});})();
+window.ADS={n:0,
+ between(name){if(!ADS_CLIENT)return;this.n++;if(this.n%2)return;try{adBreak({type:'next',name,beforeAd:()=>__adMute(true),afterAd:()=>__adMute(false)});}catch(e){}},
+ offerReward(btn,give){btn.style.display='none';if(!ADS_CLIENT)return;try{adBreak({type:'reward',name:'reward_money',beforeReward:(show)=>{btn.style.display='';btn.onclick=()=>{btn.style.display='none';show();};},beforeAd:()=>__adMute(true),afterAd:()=>__adMute(false),adViewed:()=>give(),adDismissed:()=>{},adBreakDone:()=>{}});}catch(e){}}};
+</script>
 </body>
 </html>
